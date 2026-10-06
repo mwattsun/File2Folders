@@ -225,8 +225,11 @@ void SetDates(string path, bool isFolder, DateTime? added, DateTime? modified)
 string CleanName(string title)
 {
     var name = title.Normalize(NormalizationForm.FormKC);
+    name = name.Replace('�', '-');                // � where a mis-decoded dash or bullet was
     name = Regex.Replace(name, @"\s", " ");            // tabs, newlines -> space
-    name = Regex.Replace(name, @"[/:*?""<>|]", "").Trim();
+    foreach (var c in invalidChars)                    // \ / : * ? " < > | and control chars
+        name = name.Replace(c, ' ');
+    name = name.Trim();
     name = Regex.Replace(name, @"\.$", "");            // trailing dots are illegal
     name = name.Replace("..", "");
     name = name.Replace('[', '(').Replace(']', ')');
@@ -236,9 +239,7 @@ string CleanName(string title)
     name = Regex.Replace(name, @"\.url$", "", RegexOptions.IgnoreCase);
     name = name.Replace("▶ ", "");                     // YouTube "playing" marker
     name = Regex.Replace(name, @"\A\(\d+\) ", "");     // leading (1), (2)... notification counts
-    name = name.Replace("  ", " ");
-    foreach (var c in invalidChars)                    // anything else Windows won't take, e.g. \
-        name = name.Replace(c, '_');
+    name = Regex.Replace(name, " {2,}", " ").TrimStart();
     name = Regex.Replace(name, @"[. ]+$", "");         // no trailing dots or spaces
     if (reservedRegex.IsMatch(name))                   // CON, NUL, COM1... can't be used
         name += "_";

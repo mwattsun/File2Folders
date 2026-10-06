@@ -4,7 +4,7 @@ A Windows command-line tool that turns a Netscape-format bookmarks file (as expo
 
 - **Folders become folders, links become `.URL` files.** The tree is made next to the bookmarks file, in a folder named after it without its extension.
 - **Dates are kept.** Each file and folder gets its creation time from the bookmark's `ADD_DATE` and its modified time from `LAST_MODIFIED` (or `ADD_DATE` when there is none). Use `--no-dates` to skip this.
-- **Titles are cleaned up into file names.** Characters Windows won't allow are removed or replaced, `[ ]` become `( )`, YouTube's `▶ ` and leading `(3) ` notification counts are dropped, names are cut to 127 characters, and reserved names like `CON` get a `_` added. A link with no title is named after its host.
+- **Titles are cleaned up into file names.** Characters Windows won't allow (`\ / : * ? " < > |`) become spaces, `�` becomes `-`, runs of spaces become one, `[ ]` become `( )`, YouTube's `▶ ` and leading `(3) ` notification counts are dropped, names are cut to 127 characters, and reserved names like `CON` get a `_` added. A link with no title is named after its host.
 - **Re-runs merge.** Existing folders are reused and existing `.URL` files are overwritten. Two links in the same folder whose cleaned-up titles match end up as one file (the later one wins), with a warning.
 
 ## Usage
